@@ -1,8 +1,13 @@
 language: c
 before_install:
-  - sudo apt-get update -qq
+  - wget http://ftp.gnu.org/gnu/mit-scheme/stable.pkg/9.2/mit-scheme-9.2-x86-64.tar.gz
+  - tar xzf mit-scheme-9.2-x86-64.tar.gz
 install:
-  - sudo apt-get install -qq mit-scheme
+  - pushd mit-scheme-9.2-x86-64/src
+  - ./configure
+  - make compile-microcode
+  - make install
+  - popd
 script: 
   - make
 
