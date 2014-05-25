@@ -3,7 +3,7 @@ before_install:
   - wget http://ftp.gnu.org/gnu/mit-scheme/stable.pkg/9.2/mit-scheme-9.2-x86-64.tar.gz
   - tar xzf mit-scheme-9.2-x86-64.tar.gz
 install:
-  - pushd mit-scheme-9.2-x86-64/src
+  - pushd mit-scheme-9.2/src
   - ./configure
   - make compile-microcode
   - make install
