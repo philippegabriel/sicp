@@ -6,7 +6,7 @@ install:
   - pushd mit-scheme-9.2/src
   - ./configure
   - make compile-microcode
-  - make install
+  - sudo make install
   - popd
 script: 
   - make
