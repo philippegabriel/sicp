@@ -1,0 +1,8 @@
+language: c
+install:
+  - sudo apt-get install -qq mit-scheme
+script: 
+  - make
+
+
+

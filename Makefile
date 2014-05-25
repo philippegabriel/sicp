@@ -1,6 +1,6 @@
-target=2.33
+target=$(basename $(shell ls *.scm))
 all: $(target)
-$(target):
-	mit-scheme < $(target).scm
-
+$(target): 
+	@echo '==================Making $@=============================='
+	mit-scheme < $@.scm
 
