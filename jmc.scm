@@ -15,29 +15,31 @@
 (atom '(a))
 (atom 'a)
 ;;eq
-(define-syntax eq
-	(syntax-rules ()
-		((eq x y) (if (eq? x y) 't ()))
-	)
-)
+(define (eq x y) (if (eq? x y) 't ()))
 (eq 'a 'a)
 (eq 1 2)
 (eq 't ())
 ;;car,cdr - no translation
 ;;cons - no translation
 ;;cond
-(define-syntax cond
+(define-syntax cond.
 	(syntax-rules ()
-		((cond) ())
-		((cond x y ...)
-			(let ((pred (car 'x)))
-			(if (eval pred user-initial-environment) (cadr 'x) (cond y ...))))
+		((cond.) ())
+		((cond. (p1 x) (p2 y) ...) (if p1 x (cond. (p2 y) ... )))
 	)
 )
-(cond ((eq? 'a 'a) 1stArg))
-(cond ((eq? 'a 'b) 1stArg)(#t 2ndArg))
-(cond ((eq 'a 'b) 'first) ((atom 'a) 'second))
-(let ((x 1)) (cond ((= 1 x)2)))
+'t
+''t
+'('t 'b)
+(car '('t b))
+(equal? (car '('t b)) ''t)
+(cond. ('t 'a))
+(eq 'a 'a)
+(cond. ((eq 'a 'a) 'arg1))
+(eq 'a 'b)
+(cond. ((eq 'a 'b) 'arg1))
+(cond. ((eq 'a 'b) 'first) ((atom 'a) 'second))
+(let ((x 1)) (cond. ((= 1 x)2)))
 ;;list - no translation
 ;;defun
 (define-syntax defun
@@ -51,7 +53,18 @@
 (f 100 20)
 (defun f (x) (if (= x 0) 0 (+ x (f (- x 1)))))
 (f 3)
-(defun f (x) (cond ((= x 1)x)(#t 0)))
+(defun a (x) (atom x))
+(a 1)
+(defun f (x) (cond. ((= x 1)x)(#t 0)))
 (f 1)
+(defun subst (x y z)
+	(cond.	((atom z)
+			(cond. 	((eq z y) x)
+				('t z)))
+		('t (cons (subst x y (car z)) (subst x y (cdr z))))))
 
+;(subst 'm 'b '(a b (a b c) d))
+(subst 'm 'b 'b)
+(subst 'm 'b '(a b))
+(exit) y
 
