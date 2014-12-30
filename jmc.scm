@@ -6,40 +6,29 @@
 ;;quote - no translation
 ;;atom
 (define (atom x) 
-	(cond	((eq? x ())	't)
-			((list? x)	'())
-			(else		't)
-	)
-)
+		(cond	((eq? x ()) 't)
+			((list? x) '())
+			(else	   't)))
 (atom '())
 (atom '(a))
 (atom 'a)
 ;;eq
 (define (eq x y) (if (eq? x y) 't ()))
 (eq 'a 'a)
-(eq 1 2)
+(eq 'a 'b)
 (eq 't ())
-;;car,cdr - no translation
-;;cons - no translation
+;;car,cdr,cons - no translation
 ;;cond
 (define-syntax cond.
 	(syntax-rules ()
 		((cond.) ())
-		((cond. (p1 x) (p2 y) ...) (if p1 x (cond. (p2 y) ... )))
+		((cond. (p1 x) (p2 y) ...) (if (eq? p1 't) x (cond. (p2 y) ... )))
 	)
 )
-'t
-''t
-'('t 'b)
-(car '('t b))
-(equal? (car '('t b)) ''t)
 (cond. ('t 'a))
-(eq 'a 'a)
-(cond. ((eq 'a 'a) 'arg1))
-(eq 'a 'b)
-(cond. ((eq 'a 'b) 'arg1))
-(cond. ((eq 'a 'b) 'first) ((atom 'a) 'second))
-(let ((x 1)) (cond. ((= 1 x)2)))
+(cond. ('() 'a) ('t 'b))
+(cond. ((eq 'a 'b) '1st) ((eq 'a 'a) '2nd) ((eq 'a 'b) '3rd))
+(cond. ((atom '(a b)) '1st) ((atom 'a) '2nd))
 ;;list - no translation
 ;;defun
 (define-syntax defun
@@ -51,20 +40,44 @@
 )
 (defun f (x y) (+ y x))
 (f 100 20)
-(defun f (x) (if (= x 0) 0 (+ x (f (- x 1)))))
+(defun f (x) (cond. ((eq x 0) 0) ('t (+ x (f (- x 1))))))
 (f 3)
 (defun a (x) (atom x))
 (a 1)
-(defun f (x) (cond. ((= x 1)x)(#t 0)))
-(f 1)
 (defun subst (x y z)
-	(cond.	((atom z)
+	(cond.	((eq z '()) '())
+		((atom z)
 			(cond. 	((eq z y) x)
 				('t z)))
 		('t (cons (subst x y (car z)) (subst x y (cdr z))))))
 
-;(subst 'm 'b '(a b (a b c) d))
-(subst 'm 'b 'b)
-(subst 'm 'b '(a b))
+(subst 'm 'b '(a b (a b c) d))
+;null.
+(defun null. (x)
+	(eq x '()))
+(null. 'a)
+(null. '())
+
+;and
+(defun and. (x y)
+	(cond. 	(x (cond. (y 't) ('t '())))
+		('t '())))
+(and. (atom 'a) (eq 'a 'a))
+(and. (atom 'a) (eq 'a 'b))
+
+;not.
+(defun not. (x)
+	(cond. 	(x '())
+		('t 't)))
+(not. (eq 'a 'a))
+(not. (eq 'a 'b))
+
+;append
+(defun append. (x y)
+	(cond. 	((null. x) y)
+		('t (cons (car x) (append. (cdr x) y)))))
+(append. '(a b) '(c d))
+(append. '() '(c d))
+
 (exit) y
 
