@@ -58,7 +58,7 @@
 (null. 'a)
 (null. '())
 
-;and
+;and.
 (defun and. (x y)
 	(cond. 	(x (cond. (y 't) ('t '())))
 		('t '())))
@@ -72,12 +72,30 @@
 (not. (eq 'a 'a))
 (not. (eq 'a 'b))
 
-;append
+;append.
 (defun append. (x y)
 	(cond. 	((null. x) y)
 		('t (cons (car x) (append. (cdr x) y)))))
 (append. '(a b) '(c d))
 (append. '() '(c d))
+;pair
+(defun pair. (x y)
+	(cond.	((and. (null. x) (null. y)) '())
+			((and. (not. (atom x)) (not. (atom y)))
+				(cons (list (car x) (car y))
+					(pair. (cdr x) (cdr y))))))
+(pair. '(x y z) '(a b c))
+;assoc.
+(defun assoc. (x y)
+	(cond.	((eq (caar y) x) (cadar y))
+			('t (assoc. x (cdr y)))))
+(assoc. 'x '((x a) (y b)))
+(assoc. 'x '((x new) (x a) (y b)))
+
+
+
+
+
 
 (exit) y
 
